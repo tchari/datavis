@@ -18,46 +18,53 @@
 		<!-- <p>Here's some text that will hopefully be overwritten</p> -->
 		<script type="text/javascript">
 			var svg = d3.select("body").append("svg");
-			var dataset = [25, 7, 5, 26, 11, 8, 25, 14, 23, 19, 14, 11, 22, 29, 11, 13, 12, 17, 18, 10, 24, 18, 25, 9, 3];
 			var canDim = [500, 500];
-			var hScale = d3.scaleLinear().domain([0,Math.max.apply(null,dataset)]).range([0, canDim[1]]);
-			var barDim = [canDim[0]/dataset.length, canDim[1]];
-			var hAxis = d3.axisLeft(hScale);
-			//hAxis.scale(hScale);
-			svg.attr("width", canDim[0])
-				.attr("height", canDim[1]);
-			svg.selectAll("rect")
-				.data(dataset)
-				.enter()
-				.append("rect")
-				.attr("y", function (d) {return canDim[1]-hScale(d);})
-				.attr("x", function(d,i) {return i*(barDim[0]+1);})
-				.attr("width", barDim[0])
-				.attr("height", function(d) {return hScale(d);});
+			var data = 	[
+							[48, 90, 31, 97],
+							[79, 92, 93, 64],
+							[75, 8, 47, 4],
+							[86, 15, 83, 64],
+							[37, 63, 88, 30],
+							[96, 68, 46, 32],
+							[61, 39, 97, 62],
+							[19, 78, 10, 21],
+							[40, 23, 73, 26],
+							[32, 3, 35, 87]
+						];
 
-			//d3.select("body").selectAll("p")
-			//	.data(dataset)
-			//	.enter()
-			//	.append("p")
-			//	.text(function(d) {return d;})
-			//	.style(
-			//		"color", function(d) {
-			//			if (d>2) {
-			//				return "red";
-			//			}
-			//			else {
-			//				return "green";
-			//			}
-			//		})
-			//	.style(
-			//		"font-weight", function(d) {
-			//			if (d>2) {
-			//				return "normal";
-			//			}
-			//			else {
-			//				return "bold";
-			//			}
-			//		});
+			var maxr = Math.sqrt(0.31831*canDim[0]*canDim[1]/data.length); //0.032 = 0.1/PI where 0.1 comes from 10%
+			console.log(maxr);
+			var Lim = [];
+			var Scale = [];
+			for(i=0;i<data[0].length;i++){
+				Lim[i] = [d3.min(data, function(d) { return d[i];}),d3.max(data, function(d) { return d[i];})];
+			}
+
+			var xScale = d3.scaleLinear().domain([Lim[0][0],Lim[0][1]]).range([0, canDim[0]]);
+			var yScale = d3.scaleLinear().domain([Lim[1][0],Lim[1][1]]).range([0, canDim[1]]);
+			var rScale = d3.scaleLinear().domain([Lim[2][0],Lim[2][1]]).range([0.1*maxr, maxr]);
+			var cScale = d3.scaleLinear().domain([Lim[3][0],Lim[3][1]]).rangeRound([0, 255]);
+
+			//console.log(test);
+
+			svg.attr("width", canDim[0]+2*maxr)
+				.attr("height", canDim[1]+2*maxr);
+			svg.selectAll("circle")
+				.data(data)
+				.enter()
+				.append("circle")
+				.attr("stroke","black").attr("fill-opacity","0.5")
+				.attr("cx", function (d) {return xScale(d[0])+maxr;})
+				.attr("cy", function (d) {return yScale(d[1])+maxr;})
+				.attr("r", function (d) {return rScale(d[2]);})
+				.attr("fill", function (d) { //return "red";});
+					var cval = cScale(d[3]).toString();
+					var returnVal = cval + "," + cval + "," + cval
+					return "rgb("+returnVal+")";}
+					);
+				
+				
+
 
 		</script>
 	</body>
