@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3 Test</title>
+		<script src="d3/d3.js" type="text/javascript"></script>
+		<style>
+			div.bar {
+				display: inline-block;
+				width: 20px;
+				height: 75px;
+				background-color: teal;
+				margin-right: 2px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- <p>Here's some text that will hopefully be overwritten</p> -->
+		<script type="text/javascript">
+			var svg = d3.select("body").append("svg");
+			var dataset = [25, 7, 5, 26, 11, 8, 25, 14, 23, 19, 14, 11, 22, 29, 11, 13, 12, 17, 18, 10, 24, 18, 25, 9, 3];
+			var canDim = [500, 500];
+			var hScale = d3.scaleLinear().domain([0,Math.max.apply(null,dataset)]).range([0, canDim[1]]);
+			var barDim = [canDim[0]/dataset.length, canDim[1]];
+			var hAxis = d3.axisLeft(hScale);
+			//hAxis.scale(hScale);
+			svg.attr("width", canDim[0])
+				.attr("height", canDim[1]);
+			svg.selectAll("rect")
+				.data(dataset)
+				.enter()
+				.append("rect")
+				.attr("y", function (d) {return canDim[1]-hScale(d);})
+				.attr("x", function(d,i) {return i*(barDim[0]+1);})
+				.attr("width", barDim[0])
+				.attr("height", function(d) {return hScale(d);});
+
+			//d3.select("body").selectAll("p")
+			//	.data(dataset)
+			//	.enter()
+			//	.append("p")
+			//	.text(function(d) {return d;})
+			//	.style(
+			//		"color", function(d) {
+			//			if (d>2) {
+			//				return "red";
+			//			}
+			//			else {
+			//				return "green";
+			//			}
+			//		})
+			//	.style(
+			//		"font-weight", function(d) {
+			//			if (d>2) {
+			//				return "normal";
+			//			}
+			//			else {
+			//				return "bold";
+			//			}
+			//		});
+
+		</script>
+	</body>
+</html>
